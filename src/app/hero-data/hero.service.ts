@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -8,7 +8,7 @@ import { Hero } from '../hero';
 @Injectable()
 export class HeroService {
   private heroesUrl = 'http://localhost:3000/HEROES';
-
+  private headers = new Headers({'Content-Type': 'application/json'});
   constructor(private http: Http) {}
 
   getHeroes(): Promise<Hero[]> {
@@ -24,6 +24,23 @@ export class HeroService {
       .toPromise()
       .then(response => response.json() as Hero)
       .catch(this.handleError);
+  }
+
+  update(hero: Hero): Promise<Hero> {
+    const url = `${this.heroesUrl}/${hero.id}`;
+    return this.http.put(url, JSON.stringify(hero), { headers: this.headers })
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleError);
+  }
+
+  delete(id: number): Promise<void> {
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http.delete(url, { headers: this.headers })
+      .toPromise()
+      .then(() => null)
+      .catch(this.handleError);
+
   }
 
   private handleError(error: any): Promise<any> {
