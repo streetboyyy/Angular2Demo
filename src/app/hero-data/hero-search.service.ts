@@ -6,7 +6,6 @@ import { Hero } from '../hero';
 
 @Injectable()
 export class HeroSearchService {
-  private heroesUrl = 'http://localhost:3000/HEROES';
   constructor(private http: Http) { }
 
   search(term: string): Observable<Hero[]> {
